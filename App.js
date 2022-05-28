@@ -5,7 +5,7 @@ import SaveButton from './components/SaveButton';
 import IconMaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Color from './components/theme/Color';
 import IconEntypo from 'react-native-vector-icons/Entypo';
-import {uploadImage} from './components/axios/ServerRequest';
+import axios from 'axios';
 
 const {width, height} = Dimensions.get('window');
 const windowHeight = Dimensions.get('window').height;
@@ -53,23 +53,15 @@ class App extends Component {
             type: image.type,
             uri: image.uri,
         });
-        // formData.append('image_category ', 'pesonal');
-        // formData.append('image_viewtype', 'profile');
-        uploadImage(formData, 'personal', 'profile')
-            .then(response => {
-                if (response.status === 200) {
-                    console.log(response.data);
-                }
-            }).catch(error => {
+        axios.post('http://192.168.29.242:5000/upload' ,formData ,
+            {
+                headers: {'Content-Type': 'multipart/form-data'}
+            }).then(response => {
+            if (response.status === 200 ) {
+                console.log(response.data);
+            }
+        }).catch(error => {
             console.log(error);
-            if (error.response !== undefined && error.response.status === 401) {
-                console.log(error.response.status);
-                console.log(error.response);
-            }
-            if (error.response !== undefined && error.response.status === 500) {
-                console.log(error.response.status);
-                console.log(error.response);
-            }
         });
     };
 
